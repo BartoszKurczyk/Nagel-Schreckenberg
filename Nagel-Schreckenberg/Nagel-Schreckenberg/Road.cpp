@@ -8,6 +8,10 @@ Road::Road()
 
 Road::~Road()
 {
+	if (car != NULL)
+	{
+		delete car;
+	}
 }
 
 
@@ -61,5 +65,13 @@ void Road::increaseSpeed()
 	if (car->v < car->vmax)
 	{
 		car->v++;
+	}
+}
+
+void Road::decreaseSpeed()
+{
+	if (car->v >1)
+	{
+		car->v--;
 	}
 }

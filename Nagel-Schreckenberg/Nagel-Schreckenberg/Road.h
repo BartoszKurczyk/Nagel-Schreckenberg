@@ -16,6 +16,7 @@ public:
 	void CarSetToNULL();
 	void setSpeed(int speed);
 	void increaseSpeed();
+	void decreaseSpeed();
 
 private:
 	Car * car;

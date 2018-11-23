@@ -7,6 +7,7 @@ Simulator::Simulator()
 	probability = 80;
 	timeOfSimulation = 50;
 	road_lenght = 20;
+	fortuitousEvent = 10;
 
 	road = new Road*[2];
 
@@ -19,6 +20,14 @@ Simulator::Simulator()
 
 Simulator::~Simulator()
 {
+	delete[] car;
+
+	for (int i = 0; i < 2; i++)
+	{
+		delete[] road[i];
+	}
+
+	delete[] road;
 	
 }
 
@@ -27,13 +36,16 @@ void Simulator::Simulation()
 	int k_tmp;
 	int carIterator = 0;
 	int distanceCounetr = 0;
-	int randToMakeCarAliveSecond, randToMakeCarAliveFirst;
+	int randToMakeCarAliveSecond, randToMakeCarAliveFirst, randToMakeFortuitousEventFirst, randToMakeFortuitousEventSecond;
 	bool flag = 1;
 	for (int i = 0; i < timeOfSimulation; i++)
 	{
-		draw();
+		
 		randToMakeCarAliveFirst = (std::rand() % 100) + 1;
-		randToMakeCarAliveSecond= (std::rand() % 100) + 1;
+		draw();
+		randToMakeCarAliveSecond = (std::rand() % 100) + 1;
+		randToMakeFortuitousEventFirst = (std::rand() % 100) + 1;
+		randToMakeFortuitousEventSecond = (std::rand() % 100) + 1;
 		
 		
 		for (int k = 0; k < road_lenght; k++)
@@ -41,6 +53,11 @@ void Simulator::Simulation()
 			
 			if (road[0][k].CheckCar())
 			{
+				if (randToMakeFortuitousEventFirst >= 1 && randToMakeFortuitousEventFirst <= fortuitousEvent)
+				{
+					road[0][k].decreaseSpeed();
+					flag = 0;
+				}
 				k_tmp = k - road[0][k].GetSpeed();
 				if (k_tmp < 0)
 				{
@@ -55,7 +72,7 @@ void Simulator::Simulation()
 						{
 							road[0][k].setSpeed(distanceCounetr-1);
 						}
-						if (l == k - road[0][k].GetSpeed())
+						if (l == k - road[0][k].GetSpeed() && flag)
 						{
 							road[0][k].increaseSpeed();
 							break;
@@ -75,6 +92,11 @@ void Simulator::Simulation()
 			
 			if (road[1][k].CheckCar())
 			{
+				if (randToMakeFortuitousEventSecond >= 1 && randToMakeFortuitousEventSecond <= fortuitousEvent)
+				{
+					road[1][k].decreaseSpeed();
+					flag = 0;
+				}
 				k_tmp = k + road[1][k].GetSpeed();
 				if (k_tmp > road_lenght-1)
 				{
@@ -90,7 +112,7 @@ void Simulator::Simulation()
 							road[1][k].setSpeed(distanceCounetr - 1);
 							break;
 						}
-						if (l == k + road[1][k].GetSpeed())
+						if (l == k + road[1][k].GetSpeed() && flag)
 						{
 							road[1][k].increaseSpeed();
 							break;
@@ -106,14 +128,12 @@ void Simulator::Simulation()
 			
 		}
 		
-		if ((randToMakeCarAliveFirst >= 1 && randToMakeCarAliveFirst <= probability)/* || flag*/)
+		if ((randToMakeCarAliveFirst >= 1 && randToMakeCarAliveFirst <= probability))
 		{
 
 			road[0][road_lenght - 1].AddCar(car[carIterator]);
 			carIterator++;
 			if (carIterator == (2 * road_lenght) + 1) carIterator = 0;
-			flag = 0;
-
 		}
 		if (randToMakeCarAliveSecond >= 1 && randToMakeCarAliveSecond <= probability)
 		{
@@ -124,6 +144,7 @@ void Simulator::Simulation()
 
 		}
 		Sleep(1000);
+		flag = 1;
 		//getchar();
 	}
 

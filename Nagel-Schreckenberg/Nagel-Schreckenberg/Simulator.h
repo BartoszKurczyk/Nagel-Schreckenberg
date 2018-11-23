@@ -14,7 +14,7 @@ public:
 	void draw();
 
 private:
-	int road_lenght, delay_lenght,timeOfSimulation,probability;
+	int road_lenght, delay_lenght,timeOfSimulation,probability, fortuitousEvent;
 	Road** road;
 	Car** car;
 

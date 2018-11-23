@@ -8,10 +8,6 @@ public:
 	Car();
 	~Car();
 	int car_lenght,v,vmax;
-	bool isOnWay;
-	
-	
-
 };
 
 
