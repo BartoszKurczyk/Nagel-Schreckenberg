@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "Simulator.h"
 
-Simulator::Simulator()
+Simulator::Simulator(int new_road_lenght, int newTimeOfSimulation, int newProbability, int newfFrtuitousEvent)
 {
 	
-	probability = 80;
-	timeOfSimulation = 50;
-	road_lenght = 20;
-	fortuitousEvent = 10;
+	probability = newProbability;
+	timeOfSimulation = newTimeOfSimulation;
+	road_lenght = new_road_lenght;
+	fortuitousEvent = newfFrtuitousEvent;
 
 	road = new Road*[2];
 
@@ -37,7 +37,7 @@ void Simulator::Simulation()
 	int carIterator = 0;
 	int distanceCounetr = 0;
 	int randToMakeCarAliveSecond, randToMakeCarAliveFirst, randToMakeFortuitousEventFirst, randToMakeFortuitousEventSecond;
-	bool flag = 1;
+	bool flag = 1, speedIncreaseFlag = 1;
 	for (int i = 0; i < timeOfSimulation; i++)
 	{
 		
@@ -53,6 +53,8 @@ void Simulator::Simulation()
 			
 			if (road[0][k].CheckCar())
 			{
+				flag = 1;
+				speedIncreaseFlag = 1;
 				if (randToMakeFortuitousEventFirst >= 1 && randToMakeFortuitousEventFirst <= fortuitousEvent)
 				{
 					road[0][k].decreaseSpeed();
@@ -70,14 +72,25 @@ void Simulator::Simulation()
 						distanceCounetr++;
 						if (road[0][l].CheckCar())//Przemieœci siê o odleg³oœæ i zmieni prêdkoœæ
 						{
-							road[0][k].setSpeed(distanceCounetr-1);
-						}
-						if (l == k - road[0][k].GetSpeed() && flag)
-						{
-							road[0][k].increaseSpeed();
+							if (distanceCounetr - 1 != 0)
+							{
+								road[0][k].setSpeed(distanceCounetr - 1);
+							}
+							speedIncreaseFlag = 0;
 							break;
+						}	
+					}
+					if (flag && speedIncreaseFlag)
+					{
+						for (int z = k - 1; z >= k - road[0][k].GetSpeed() - 1; z--)
+						{
+							if (road[0][z].CheckCar()) break;
+							else if (z == k - road[0][k].GetSpeed() - 1)
+							{
+								road[0][k].increaseSpeed();
+								break;
+							}
 						}
-								
 					}
 					distanceCounetr = 0;
 					k_tmp = k - road[0][k].GetSpeed();
@@ -87,11 +100,14 @@ void Simulator::Simulation()
 			}
 			
 		}
+
 		for (int k = road_lenght - 1; k >= 0; k--)
 		{
 			
 			if (road[1][k].CheckCar())
 			{
+				flag = 1;
+				speedIncreaseFlag = 1;
 				if (randToMakeFortuitousEventSecond >= 1 && randToMakeFortuitousEventSecond <= fortuitousEvent)
 				{
 					road[1][k].decreaseSpeed();
@@ -109,15 +125,27 @@ void Simulator::Simulation()
 						distanceCounetr++;
 						if (road[1][l].CheckCar())//Przemieœci siê o odleg³oœæ i zmieni prêdkoœæ
 						{
-							road[1][k].setSpeed(distanceCounetr - 1);
+							if (distanceCounetr - 1 != 0)
+							{
+								road[1][k].setSpeed(distanceCounetr - 1);
+							}
+							speedIncreaseFlag = 0;
 							break;
 						}
-						if (l == k + road[1][k].GetSpeed() && flag)
-						{
-							road[1][k].increaseSpeed();
-							break;
-						}
+						
 
+					}
+					if (flag && speedIncreaseFlag)
+					{
+						for (int z = k+1; z <= k + road[1][k].GetSpeed() + 1; z++)
+						{
+							if (road[1][z].CheckCar()) break;
+							else if (z == k + road[1][k].GetSpeed() + 1)
+							{
+								road[1][k].increaseSpeed();
+								break;
+							}
+						}	
 					}
 					distanceCounetr = 0;
 					k_tmp = k + road[1][k].GetSpeed();

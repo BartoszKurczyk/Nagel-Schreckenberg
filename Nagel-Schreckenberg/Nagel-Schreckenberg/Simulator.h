@@ -8,7 +8,7 @@
 class Simulator
 {
 public:
-	Simulator();
+	Simulator(int new_road_lenght, int newTimeOfSimulation, int newProbability, int newfFrtuitousEvent);
 	~Simulator();
 	void Simulation();
 	void draw();
