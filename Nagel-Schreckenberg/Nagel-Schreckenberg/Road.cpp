@@ -75,3 +75,18 @@ void Road::decreaseSpeed()
 		car->v--;
 	}
 }
+
+void Road::setNotIncrease(bool x)
+{
+	if (x)
+	{
+		car->setTrueNotToIncreaseSpeed();
+	}
+	else
+		car->setFalseNotToIncreaseSpeed();
+}
+
+bool Road::getNotIncrease()
+{
+	return car->getNotToIncreaseSpeed();
+}

@@ -47,6 +47,29 @@ void Simulator::Simulation()
 		randToMakeFortuitousEventFirst = (std::rand() % 100) + 1;
 		randToMakeFortuitousEventSecond = (std::rand() % 100) + 1;
 		
+
+		for (int k = 0; k < road_lenght; k++)
+		{
+			if (road[0][k].CheckCar() && road[0][k - 1].CheckCar())
+			{
+				road[0][k].setNotIncrease(1);
+			}
+			else if(road[0][k].CheckCar() && !road[0][k - 1].CheckCar())
+				road[0][k].setNotIncrease(0);
+		}
+		for (int k = road_lenght-1; k >= 0; k--)
+		{
+			if (road[1][k].CheckCar() && road[1][k + 1].CheckCar())
+			{
+				road[1][k].setNotIncrease(1);
+			}
+			else if (road[1][k].CheckCar() && !road[1][k + 1].CheckCar())
+				road[1][k].setNotIncrease(0);
+		}
+		
+
+
+
 		
 		for (int k = 0; k < road_lenght; k++)
 		{
@@ -67,6 +90,7 @@ void Simulator::Simulation()
 				}
 				else
 				{
+
 					for (int l = k - 1; l >= k - road[0][k].GetSpeed(); l--)
 					{
 						distanceCounetr++;
@@ -80,7 +104,7 @@ void Simulator::Simulation()
 							break;
 						}	
 					}
-					if (flag && speedIncreaseFlag)
+					if (flag && speedIncreaseFlag && !road[0][k].getNotIncrease())
 					{
 						for (int z = k - 1; z >= k - road[0][k].GetSpeed() - 1; z--)
 						{
@@ -135,7 +159,7 @@ void Simulator::Simulation()
 						
 
 					}
-					if (flag && speedIncreaseFlag)
+					if (flag && speedIncreaseFlag && !road[1][k].getNotIncrease())
 					{
 						for (int z = k+1; z <= k + road[1][k].GetSpeed() + 1; z++)
 						{
@@ -189,7 +213,7 @@ void Simulator::draw()
 		{
 			if (road[i][j].CheckCar())
 			{
-				std::cout << "*  ";
+				std::cout << road[i][j].GetSpeed()<<"  ";
 			}
 			else
 			{

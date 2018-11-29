@@ -17,6 +17,8 @@ public:
 	void setSpeed(int speed);
 	void increaseSpeed();
 	void decreaseSpeed();
+	void setNotIncrease(bool x);
+	bool getNotIncrease();
 
 private:
 	Car * car;
